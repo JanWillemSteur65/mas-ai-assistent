@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maximo-ai-agent-type-a
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: maximo-ai-agent-type-a
+  template:
+    metadata:
+      labels:
+        app: maximo-ai-agent-type-a
+    spec:
+      containers:
+        - name: app
+          image: image-registry.openshift-image-registry.svc:5000/mas-mcp-assistent/maximo-ai-agent-type-a:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: PORT
+              value: "3000"
+            - name: APP_CONFIG_JSON
+              valueFrom:
+                secretKeyRef:
+                  name: agent-config
+                  key: APP_CONFIG_JSON
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: maximo-ai-agent-type-a
+spec:
+  selector:
+    app: maximo-ai-agent-type-a
+  ports:
+    - name: http
+      port: 80
+      targetPort: 3000
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: maximo-ai-agent-type-a
+spec:
+  to:
+    kind: Service
+    name: maximo-ai-agent-type-a
+  port:
+    targetPort: http

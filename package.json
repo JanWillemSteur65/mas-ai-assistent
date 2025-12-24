@@ -1,0 +1,19 @@
+{
+  "name": "maximo-ai-agent-type-a",
+  "private": true,
+  "workspaces": [
+    "ui",
+    "server"
+  ],
+  "scripts": {
+    "dev": "concurrently -n UI,SERVER -c auto npm:dev:ui npm:dev:server",
+    "dev:ui": "npm --workspace ui run dev",
+    "dev:server": "npm --workspace server run dev",
+    "build": "npm --workspace ui run build && npm --workspace server run build",
+    "start": "npm --workspace server start",
+    "lint": "npm --workspace ui run lint && npm --workspace server run lint"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
